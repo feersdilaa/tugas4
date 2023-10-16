@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data from BMKG</title>
+</head>
+<body>
+
+    <h1>BMKG Data</h1>
+    <div id="data-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchData);
+
+        function fetchData() {
+            const apiUrl = 'https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/DigitalForecast-JawaTimur.xml';
+
+            fetch(apiUrl)
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(data, 'text/xml');
+                    const forecastData = xmlDoc.getElementsByTagName('forecast')[0].textContent;
+
+                    displayData(forecastData);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        function displayData(data) {
+            const dataContainer = document.getElementById('data-container');
+            dataContainer.innerHTML = `<pre>${data}</pre>`;
+        }
+    </script>
+
+</body>
+</html>
